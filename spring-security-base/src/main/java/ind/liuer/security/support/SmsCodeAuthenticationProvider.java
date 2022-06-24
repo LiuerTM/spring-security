@@ -2,10 +2,13 @@ package ind.liuer.security.support;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
 
 /**
  * @author Mingの
@@ -15,6 +18,9 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
+    public SmsCodeAuthenticationProvider() {
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(SmsCodeAuthenticationToken.class, authentication, "Only UsernamePasswordAuthenticationToken is supported");
@@ -23,10 +29,10 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
         String code = (String) token.getCredentials();
         log.info("手机号[{}]，验证码[{}]，开始登录", mobile, code);
         String codeInStore = getCode(mobile);
-        if(!StringUtils.hasText(code) || !code.equals(codeInStore)) {
-
+        if (StringUtils.hasText(code) && code.equals(codeInStore)) {
+            return new SmsCodeAuthenticationToken(token.getPrincipal(), authentication.getCredentials(), Collections.emptyList());
         }
-        return null;
+        throw new BadCredentialsException("验证码错误");
     }
 
     private String getCode(String mobile) {

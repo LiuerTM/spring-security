@@ -5,6 +5,7 @@ import ind.liuer.security.vo.ResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @since 1.0
  */
 @Slf4j
+@Component
 public class FrameworkAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     public FrameworkAuthenticationSuccessHandler() {
